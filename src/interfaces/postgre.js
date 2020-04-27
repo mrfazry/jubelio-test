@@ -34,6 +34,7 @@ module.exports = class {
   async find() {
     const products = await this.sql`
       select * from products
+      order by id asc
     `;
 
     return products;
