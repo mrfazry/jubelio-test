@@ -17,7 +17,7 @@ function App() {
   return (
     <div className="App">
       <Container fluid={true}>
-        <h1 className="text-center">Daftar produk aktif kamu</h1>
+        <h1 className="text-center">Daftar produk kamu di Elevenia</h1>
         <Col md={12}>
           <Row>
             {products.map((product, index) => (
