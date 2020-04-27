@@ -1,13 +1,7 @@
 const postgres = require("postgres");
 const dotenv = require("dotenv");
-const Product = require("../entities/product");
 
 dotenv.config();
-//PGHOST=localhost
-// PGUSERNAME=postgres
-// PGDATABASE=postgres
-// PGPASSWORD=postgres1234jubelio
-// PGPORT=5432
 const sql = postgres({
   host: process.env.PGHOST,
   port: process.env.PGPORT,
