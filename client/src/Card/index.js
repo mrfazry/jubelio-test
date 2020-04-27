@@ -45,26 +45,39 @@ export default function CustomCard(props) {
     setEditable({ ...editable, [e.target.name]: false });
 
     if (values[e.target.name] !== product[e.target.name]) {
-      axios.patch(
-        `http://localhost:8000/products/${product.id}`,
-        { [e.target.name]: e.target.value },
-        {
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
+      axios
+        .patch(
+          `http://localhost:8000/products/${product.id}`,
+          { [e.target.name]: e.target.value },
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        )
+        .then(() => {
+          props.triggerFetching();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }
 
   function deleteProduct() {
-    axios.delete(`http://localhost:8000/products/${product.id}`, null, {
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-
-    setModalOpen(false);
+    axios
+      .delete(`http://localhost:8000/products/${product.id}`, null, {
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+      .then(() => {
+        props.triggerFetching();
+        setModalOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
