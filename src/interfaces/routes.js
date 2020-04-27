@@ -14,15 +14,13 @@ module.exports = [
     path: "/products",
     handler: async (request, h) => {
       let products = await listProducts({ productRepo });
-      console.log("GET /products setelah select database");
-      console.log(products);
 
       if (!products.length) {
         const externalProducts = await getProductsFromExternalProvider();
 
         externalProducts.map(
-          async ({ name, sku, imageURL, description, price }) => {
-            await createProduct(name, sku, imageURL, description, price, {
+          async ({ name, sku, image_url, description, price }) => {
+            await createProduct(name, sku, image_url, description, price, {
               productRepo,
             });
           }
@@ -36,33 +34,52 @@ module.exports = [
   },
   {
     method: "PATCH",
-    path: "/products",
+    path: "/products/{id}",
     handler: async (request, h) => {
-      console.log(request);
-      const productId = 1;
-      const name = "nama";
-      const sku = "sku";
-      const imageURL = "imageURL";
-      const description = "deskripsi";
-      const price = 10000;
+      const productId = request.params.id;
+      const dataToUpdate = request.payload;
 
-      await updateProduct(productId, name, sku, imageURL, description, price, {
-        productRepo,
-      });
+      try {
+        await updateProduct(productId, dataToUpdate, {
+          productRepo,
+        });
 
-      return "PATCH /products";
+        return h.response().code(204);
+      } catch (err) {
+        const payload = JSON.stringify({
+          data: null,
+          error: {
+            name: "UpdateError",
+            code: 001,
+            message: `Cannot update the record of product #${productId}.\n${err}`,
+          },
+        });
+
+        return h.response(payload).code(400);
+      }
     },
   },
   {
     method: "DELETE",
-    path: "/products",
+    path: "/products/{id}",
     handler: async (request, h) => {
-      console.log(request);
-      const productId = 1;
+      const productId = request.params.id;
+      try {
+        await deleteProduct(productId, { productRepo });
 
-      await deleteProduct(productId, { productRepo });
+        return h.response().code(204);
+      } catch (err) {
+        const payload = JSON.stringify({
+          data: null,
+          error: {
+            name: "DeleteError",
+            code: 002,
+            message: `Cannot delete the record of product #${productId}.\n${err}`,
+          },
+        });
 
-      return "DELETE /products";
+        return h.response(payload).code(400);
+      }
     },
   },
 ];

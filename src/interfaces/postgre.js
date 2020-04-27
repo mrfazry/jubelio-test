@@ -26,7 +26,7 @@ module.exports = class {
       insert into products (
         name, sku, image_url, description, price
       ) values (
-        ${product.name}, ${product.sku}, ${product.imageURL}, ${product.description}, ${product.price}
+        ${product.name}, ${product.sku}, ${product.image_url}, ${product.description}, ${product.price}
       )
     `;
   }
@@ -40,10 +40,31 @@ module.exports = class {
   }
 
   async merge(productId, product) {
-    // update record by id
+    let columnToUpdate = [];
+
+    Object.keys(product).forEach((field) => {
+      product[field] !== undefined && columnToUpdate.push(field);
+    });
+
+    try {
+      await this.sql`
+        update products set ${this.sql(product, ...columnToUpdate)}
+        where
+          id = ${productId}
+      `;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  async delete(productId) {
-    // remove record by id
+  async remove(productId) {
+    try {
+      await this.sql`
+        delete from products
+        where id = ${productId}
+      `;
+    } catch (err) {
+      throw err;
+    }
   }
 };

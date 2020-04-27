@@ -1,5 +1,5 @@
-function getProducts({ productRepo }) {
+function listProducts({ productRepo }) {
   return productRepo.find();
 }
 
-module.exports = getProducts;
+module.exports = listProducts;

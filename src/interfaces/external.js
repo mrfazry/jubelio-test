@@ -20,7 +20,7 @@ module.exports = function getProductsFromExternalProvider() {
       return products.map((product) => ({
         name: product.prdNm._text,
         sku: product.sellerPrdCd._text,
-        imageURL: "image url",
+        image_url: "image url",
         description: "description",
         price: product.selPrc._text,
       }));

@@ -3,12 +3,12 @@ const Product = require("../entities/product");
 function createProduct(
   name,
   sku,
-  imageURL,
+  image_url,
   description,
   price,
   { productRepo }
 ) {
-  const product = new Product(name, sku, imageURL, description, price);
+  const product = new Product(name, sku, image_url, description, price);
 
   return productRepo.persist(product);
 }
